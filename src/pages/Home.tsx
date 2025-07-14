@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import HeroImage from "../assets/images/hero.png";
 import InfoSection from "../components/InfoSection";
@@ -6,35 +6,22 @@ import CategorySection from "../components/CategorySection";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../redux/productSlice";
 import type { RootState } from "../redux/store";
-import axios from "axios";
+// import axios from "axios";
+import { mockData } from "../mockData";
+
+
 
 const Categories = ["Men", "Women", "Kids", "Shoes", "Accessories"];
 
 const Home = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state: RootState) => state.products.products);
-
-  // useEffect(() => {
-  //   // ✅ Fetch products from backend instead of using mockData
-  //   const fetchProducts = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:5000/api/products");
-  //       const data = response.data;
-
-  //       const productsWithIDs = data.map((product: any) => ({
-  //         ...product,
-  //         id: product._id || product.id?.toString(), // depends on your backend schema
-  //       }));
-
-  //       dispatch(setProducts(productsWithIDs));
-  //     } catch (error) {
-  //       console.error("Error fetching products:", error);
-  //     }
-  //   };
-
-  //   fetchProducts();
-  // }, [dispatch]);
-
+  const products = useSelector((state: RootState) => state.products.products) as
+   Array<{ id: number; name: string; price: number; image: string }>;
+  console.log("Products from Redux:", products);
+  useEffect(() => {
+    dispatch(setProducts(mockData));
+  }, [dispatch]);
+  
   return (
     <div>
       <div className="bg-white mt-2 px-4 md:px-16 lg:px-24">
@@ -45,7 +32,7 @@ const Home = () => {
             <div className="h-full flex flex-col bg-gray-100 border">
               <div className="bg-black text-white text-xs font-bold px-2 py-2.5">
                 SHOP BY CATEGORIES
-              </div>
+              </div>a
               <ul className="space-y-4 p-3 overflow-y-auto flex-grow">
                 {Categories.map((category, index) => (
                   <li
@@ -92,7 +79,7 @@ const Home = () => {
             Top Products
           </h2>
           <div className="grid grid-cols-1 mt-8 mb-8 sm:grid-cols-3 gap-6 cursor-pointer">
-            {products.slice(0, 5).map((product, index) => (
+            {products.slice(0, 5).map((product: { id: number; name: string; price: number; image: string }, index) => (
               <ProductCard key={index} product={product} />
             ))}
           </div>

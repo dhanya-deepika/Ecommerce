@@ -91,21 +91,26 @@ const cartSlice = createSlice({
         state.totalPrice += existingItem.price;
       }
     },
-
+    
     decreaseQuantity: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;
       const existingItem = state.products.find((item) => item.id === id);
-      if (existingItem && existingItem.quantity > 1) {
-        existingItem.quantity--;
-        existingItem.totalPrice -= existingItem.price;
-        state.totalQuantity--;
-        state.totalPrice -= existingItem.price;
-
-        if (existingItem.quantity === 0) {
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+          existingItem.quantity--;
+          existingItem.totalPrice -= existingItem.price;
+          state.totalQuantity--;
+          state.totalPrice -= existingItem.price;
+        } else {
+          // If quantity becomes 1 and user clicks "-", remove the item
           state.products = state.products.filter((item) => item.id !== id);
+          state.totalQuantity--;
+          state.totalPrice -= existingItem.price;
         }
       }
     },
+    
+    
   },
 });
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import type { image } from "framer-motion/client";
+// import type { image } from "framer-motion/client";
 
 interface CategoryFormProps {
   mode: "add" | "edit";

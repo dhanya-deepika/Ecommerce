@@ -25,7 +25,6 @@ const TrackOrder = () => {
           <h2 className="text-lg font-semibold mb-2">Status</h2>
           <p className="text-green-600">📦 Your order is being prepared!</p>
           {/* You can later update this with real status logic */}
-
           <h2 className="text-lg font-semibold mt-6 mb-2">Shipping To</h2>
           <p className="text-gray-700">
             {order.shippingInfo.address}, {order.shippingInfo.city},{" "}

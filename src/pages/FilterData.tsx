@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import type { RootState } from '../redux/store';
@@ -36,5 +35,4 @@ const FilterData = () => {
     </div>
   );
 };
-
 export default FilterData;

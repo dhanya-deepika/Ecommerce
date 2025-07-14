@@ -1,75 +1,74 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-interface ProductFormProps {
-  mode: "add" | "edit";
-  productId?: string;
-}
+const categories = [
+  {
+    id: "men",
+    name: "Men",
+    subcategories: ["Shirts", "Pants", "Watches"]
+  },
+  {
+    id: "women",
+    name: "Women",
+    subcategories: ["Sarees", "Chappals", "Watches"]
+  },
+  {
+    id: "kids",
+    name: "Kids",
+    subcategories: ["Toys", "Footwear", "Clothes"]
+  }
+];
 
-const ProductForm: React.FC<ProductFormProps> = ({ mode, productId }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    image: "",
-    category: "",
-  });
+const ProductForm = () => {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
-  useEffect(() => {
-    if (mode === "edit" && productId) {
-      // In future: fetch product data from backend
-      // Set form data with existing product info
-    }
-  }, [mode, productId]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+    setSelectedSubcategory(""); // Reset subcategory on change
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (mode === "add") {
-      // Future: send POST request
-    } else {
-      // Future: send PUT request
-    }
-    console.log(formData);
+  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubcategory(e.target.value);
   };
+
+  const currentSubcategories =
+    categories.find((cat) => cat.id === selectedCategory)?.subcategories || [];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Product Name"
-        className="border p-2 w-full"
-      />
-      <input
-        name="price"
-        value={formData.price}
-        onChange={handleChange}
-        placeholder="Price"
-        className="border p-2 w-full"
-      />
-      <input
-        name="image"
-        value={formData.image}
-        onChange={handleChange}
-        placeholder="Image URL"
-        className="border p-2 w-full"
-      />
-      <input
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-        placeholder="Category"
-        className="border p-2 w-full"
-      />
-      <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded"
+    <form className="space-y-4">
+      {/* Category Dropdown */}
+      <select
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+        className="w-full p-2 border rounded"
+        required
       >
-        {mode === "add" ? "Add Product" : "Update Product"}
-      </button>
+        <option value="">Select Category</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
+      </select>
+
+      {/* Subcategory Dropdown */}
+      <select
+        value={selectedSubcategory}
+        onChange={handleSubcategoryChange}
+        className="w-full p-2 border rounded"
+        required
+      >
+        <option value="">Select Subcategory</option>
+        {currentSubcategories.map((sub, index) => (
+          <option key={index} value={sub}>
+            {sub}
+          </option>
+        ))}
+      </select>
+
+      {/* Additional Fields */}
+      <input placeholder="Product Name" className="w-full p-2 border rounded" />
+      {/* Add other fields as needed */}
     </form>
   );
 };
