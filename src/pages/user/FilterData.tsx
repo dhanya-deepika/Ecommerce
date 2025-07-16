@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import type { RootState } from '../redux/store';
-import noFileProImg from '../assets/images/noFilProImg.png';
+import type { RootState } from '../../redux/store';
+import noFileProImg from "../../assets/images/noFilProImg.png";
 
 const FilterData = () => {
   const filterProducts = useSelector((state: RootState) => state.products.filterData);

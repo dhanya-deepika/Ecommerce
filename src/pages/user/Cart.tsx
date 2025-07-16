@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import EmptyCart from "../assets/Images/emptycart.png";
+import EmptyCart from "../../assets/Images/emptycart.png";
 import { FaTrashAlt } from "react-icons/fa";
-import ChangeAddress from "../components/ChangeAddress";
+import ChangeAddress from "../../components/user/ChangeAddress";
 import {
   removeFromCart,
   increaseQuantity,
   decreaseQuantity, 
-} from "../redux/cartSlice";
+} from "../../redux/cartSlice";
 
 interface Product {
   id: string;

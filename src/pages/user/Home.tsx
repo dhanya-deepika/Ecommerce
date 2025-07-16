@@ -1,13 +1,13 @@
 import  { useEffect } from "react";
-import ProductCard from "../components/ProductCard";
-import HeroImage from "../assets/images/hero.png";
-import InfoSection from "../components/InfoSection";
-import CategorySection from "../components/CategorySection";
+import ProductCard from "../../components/user/ProductCard";
+import HeroImage from "../../assets/images/hero.png";
+import InfoSection from "../../components/user/InfoSection";
+import CategorySection from "../../components/user/CategorySection";
 import { useDispatch, useSelector } from "react-redux";
-import { setProducts } from "../redux/productSlice";
-import type { RootState } from "../redux/store";
+import { setProducts } from "../../redux/productSlice";
+import type { RootState } from "../../redux/store";
 // import axios from "axios";
-import { mockData } from "../mockData";
+import { mockData } from "../../mockData";
 
 
 
@@ -37,8 +37,7 @@ const Home = () => {
                 {Categories.map((category, index) => (
                   <li
                     key={index}
-                    className="flex items-center text-sm font-medium"
-                  >
+                    className="flex items-center text-sm font-medium">
                     <div className="w-2 h-2 border border-red-500 rounded-full mr-2"></div>
                     {category}
                   </li>

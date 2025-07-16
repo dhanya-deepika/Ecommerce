@@ -1,23 +1,23 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Cart from "./pages/Cart";
-import ProductDetails from "./pages/ProductDetails";
-import Checkout from "./pages/Checkout";
-import ThankYou from "./pages/ThankYou";
-import TrackOrder from "./pages/Trackorder";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
-import FilterData from "./pages/FilterData";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Navbar from "./components/user/Navbar";
+import Footer from "./components/user/Footer";
+import Home from "./pages/user/Home";
+import Cart from "./pages/user/Cart";
+import ProductDetails from "./pages/user/ProductDetails";
+import Checkout from "./pages/user/Checkout";
+import ThankYou from "./pages/user/ThankYou";
+import TrackOrder from "./pages/user/Trackorder";
+import Contact from "./pages/user/Contact";
+import About from "./pages/user/About";
+import FilterData from "./pages/user/FilterData";
+import Login from "./components/user/Login";
+import Register from "./components/user/Register";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setProducts } from "./redux/productSlice";
-import CategoryProducts from "./pages/CategoryProducts";
-import CategorySubList from "./pages/CategorySubList";
-import InfoDetail from "./pages/InfoDetail";
+import CategoryProducts from "./pages/user/CategoryProducts";
+import CategorySubList from "./pages/user/CategorySubList";
+import InfoDetail from "./pages/user/InfoDetail";
 
 // ✅ Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
@@ -56,7 +56,7 @@ function App() {
             {/* ✅ Admin Routes */}
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/add-product" element={<AddProduct />} />
-            <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+            {/* <Route path="/admin/edit-product/:id" element={<EditProduct />} /> */}
             <Route path="/admin/view-product" element={<ViewProduct />} />
             <Route path="/admin/add-category" element={<AddCategory />} />
            <Route path="/admin/add-subcategory" element={<AddSubcategory />} />

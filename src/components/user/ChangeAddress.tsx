@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import toast from "react-hot-toast"; // Make sure to install: npm install react-hot-toast
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const ChangeAddress = ({
   setAddress,
@@ -8,18 +8,28 @@ const ChangeAddress = ({
   setAddress: (address: string) => void;
   setIsModelOpen: (isOpen: boolean) => void;
 }) => {
-  const [newAddress, setNewAddress] = React.useState("");
-  const [error, setError] = React.useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [error, setError] = useState("");
 
-  // Load address from localStorage if available
+  // Fetch existing address from dummy API on mount
   useEffect(() => {
-    const savedAddress = localStorage.getItem("userAddress");
-    if (savedAddress) {
-      setNewAddress(savedAddress);
-    }
+    const fetchAddress = async () => {
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/users/1");
+        const data = await res.json();
+        if (data?.address) {
+          const fullAddress = `${data.address.street}, ${data.address.city}`;
+          setNewAddress(fullAddress);
+        }
+      } catch (err) {
+        toast.error("Failed to load address from server.");
+      }
+    };
+
+    fetchAddress();
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmedAddress = newAddress.trim();
 
     if (!trimmedAddress || trimmedAddress.length < 10) {
@@ -28,11 +38,26 @@ const ChangeAddress = ({
       return;
     }
 
-    // Update app state and persist in localStorage
-    setAddress(trimmedAddress);
-    localStorage.setItem("userAddress", trimmedAddress);
-    toast.success("Address updated successfully!");
-    setIsModelOpen(false);
+    try {
+      // Dummy PUT request to simulate update
+      const response = await fetch("https://jsonplaceholder.typicode.com/users/1", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address: trimmedAddress,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update address");
+
+      setAddress(trimmedAddress); // Update parent state
+      toast.success("Address updated successfully!");
+      setIsModelOpen(false);
+    } catch (err) {
+      toast.error("Failed to update address. Try again.");
+    }
   };
 
   return (

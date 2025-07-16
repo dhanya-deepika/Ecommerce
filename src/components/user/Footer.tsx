@@ -43,7 +43,7 @@ const Footer = () => {
             <a href="#" className="hover:text-gray-400"><FaFacebook /></a>
             <a href="#" className="hover:text-gray-400"><FaTwitter /></a>
             <a href="#" className="hover:text-gray-400"><FaGithub /></a>
-            <a href="#" className="hover:text-gray-400"><FaLinkedin /></a>
+            {/* <a href="#" className="hover:text-gray-400"><FaLinkedin /></a> */}
           </div>
           <form className="flex">
             <input

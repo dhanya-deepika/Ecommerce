@@ -28,34 +28,41 @@ const Login = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
+  // 🔁 Call Login API dynamically
+  const loginUser = async (email: string, password: string) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
         email,
         password,
       });
-  
-      const { token, user } = res.data;
-  
+
+      return response.data; // Expecting { token, user }
+    } catch (error: any) {
+      throw error.response?.data?.error || "Login failed. Please try again.";
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const { token, user } = await loginUser(email, password);
+
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("isLoggedIn", "true");
-  
+
       if (remember) {
         localStorage.setItem("rememberEmail", email);
       }
-  
+
       onClose();
       navigate("/");
     } catch (err: any) {
-      const message = err.response?.data?.error || "Login failed. Please try again.";
-      setError(message);
-      console.error("Login error:", message);
+      setError(err);
     }
   };
-  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -63,7 +70,6 @@ const Login = ({
         ref={modalRef}
         className="w-full max-w-sm bg-white p-6 rounded shadow-lg relative"
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl"
@@ -77,7 +83,7 @@ const Login = ({
           <div className="text-red-600 text-sm mb-3 text-center">{error}</div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="block text-sm mb-1">Email</label>
             <input
@@ -122,19 +128,18 @@ const Login = ({
         </form>
 
         <div className="mt-4 text-center text-sm">
-  <span>Don't have an account?</span>{" "}
-  <button
-    type="button"
-    onClick={() => {
-      onClose();
-      openSignUp();
-    }}
-    className="text-blue-500 hover:underline"
-  >
-    Sign up
-  </button>
-</div>
-
+          <span>Don't have an account?</span>{" "}
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              openSignUp();
+            }}
+            className="text-blue-500 hover:underline"
+          >
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );

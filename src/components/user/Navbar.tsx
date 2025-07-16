@@ -8,9 +8,9 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Login from "./Login";
+import Login from "../user/Login";
 import Register from "./Register";
-import { setSearchTerm } from "../redux/productSlice";
+import { setSearchTerm } from "../../redux/productSlice";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {

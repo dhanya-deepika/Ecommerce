@@ -1,4 +1,4 @@
-import axios from "axios"; // Put this at the top if not already
+import axios from "axios"; 
 import React, { useState } from "react";
 
 const Register = ({
@@ -44,7 +44,7 @@ const Register = ({
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true, // ✅ Important for CORS
+          withCredentials: true, 
         }
       );
       

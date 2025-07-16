@@ -1,7 +1,7 @@
 // src/pages/Contact.tsx
 
 import React from "react";
-import ContactForm from '../components/ContactForm';
+// Removed unused import for ContactForm
 
 const Contact = () => {
   return (
@@ -26,7 +26,9 @@ const Contact = () => {
           className="border border-gray-300 p-3 rounded outline-black-500"
           rows={5}
           required
-        ></textarea>
+        >
+          
+        </textarea>
         <button
           type="submit"
           className="bg-black hover:bg-bl-700 text-white p-3 rounded font-semibold"

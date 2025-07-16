@@ -7,7 +7,7 @@ import {
   removeFromCart,
   increaseQuantity,
   decreaseQuantity,
-} from "../redux/cartSlice";
+} from "../../redux/cartSlice";
 
 const Checkout = ({ setOrder }: { setOrder: (order: any) => void }) => {
   const cart = useSelector((state: any) => state.cart);

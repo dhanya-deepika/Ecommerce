@@ -19,32 +19,37 @@
 
 
 import { useState, useEffect } from "react";
-import { mockData as mockProducts } from "../mockData";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../../components/user/ProductCard";
 
 const Shop = () => {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    // toggle this flag to switch between API and mock
-    const useMockData = true;
+    // ✅ Fetch from fakestoreapi instead of mock
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        const formatted = data.map((item: any) => ({
+          id: item.id,
+          name: item.title,
+          image: item.image,
+          price: item.price,
+          description: item.description,
+        }));
 
-    if (useMockData) {
-      setProducts(mockProducts as any[]);
-    } else {
-      // Your actual API call
-      fetch("/api/products")
-        .then((res) => res.json())
-        .then((data) => setProducts(data))
-        .catch((err) => console.error(err));
-    }
+        setProducts(formatted);
+        localStorage.setItem("products", JSON.stringify(formatted));
+      })
+      .catch((err) => console.error("API error:", err));
   }, []);
 
   return (
-    <div className="product-grid">
+    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );
 };
+
+export default Shop;

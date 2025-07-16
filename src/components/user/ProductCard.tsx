@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import { addToCart } from '../redux/cartSlice';
+import { addToCart } from '../../redux/cartSlice';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -13,12 +13,12 @@ interface Product {
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();
   
-  // ✅ Generate unique product ID based on name
+
   const productId = product.name.replace(/\s+/g, '-').toLowerCase();
   const slug = productId;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent Link navigation on button click
+    e.preventDefault(); 
     dispatch(
       addToCart({
         id: productId,

@@ -83,85 +83,58 @@
 // export default AddCategory;
 
 // ✅ AddCategory.tsx (Using LocalStorage)
-import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const AddCategory = () => {
-  const [name, setName] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [title, setTitle] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [categories, setCategories] = useState<{ title: string; imageUrl: string }[]>([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('categories') || '[]');
-    setCategories(stored);
+    const stored = localStorage.getItem("categories");
+    if (stored) {
+      setCategories(JSON.parse(stored));
+    }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !image) {
-      alert('All fields required');
+  const handleAdd = () => {
+    if (!title || !imageUrl) {
+      toast.error("Please enter both title and image URL.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const newCategory = {
-        id: uuidv4(),
-        name,
-        image: reader.result,
-      };
-
-      const updated = [...categories, newCategory];
-      localStorage.setItem('categories', JSON.stringify(updated));
-      setCategories(updated);
-
-      setName('');
-      setImage(null);
-      alert('Category added!');
+    const newCategory = {
+      title: title.trim(),
+      imageUrl: imageUrl.trim(),
     };
-    reader.readAsDataURL(image);
+
+    const updated = [...categories, newCategory];
+    setCategories(updated);
+    localStorage.setItem("categories", JSON.stringify(updated));
+    toast.success("Category added!");
+    setTitle("");
+    setImageUrl("");
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Add Category</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Category Name"
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files?.[0] || null)}
-          className="w-full"
-          required
-        />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Add Category
-        </button>
-      </form>
-
-      {/* Category List View */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-2">Added Categories</h3>
-        {categories.length === 0 ? (
-          <p className="text-gray-500">No categories yet.</p>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {categories.map((cat) => (
-              <div key={cat.id} className="p-3 border rounded shadow text-center">
-                <img src={cat.image} alt={cat.name} className="w-24 h-24 mx-auto object-cover mb-2" />
-                <p className="capitalize font-medium">{cat.name}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-2">Add Category</h2>
+      <input
+        className="border p-2 mb-2 w-full"
+        placeholder="Category Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        className="border p-2 mb-2 w-full"
+        placeholder="Image URL"
+        value={imageUrl}
+        onChange={(e) => setImageUrl(e.target.value)}
+      />
+      <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleAdd}>
+        Add Category
+      </button>
     </div>
   );
 };
