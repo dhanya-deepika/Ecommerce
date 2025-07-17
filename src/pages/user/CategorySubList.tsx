@@ -1,28 +1,56 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+const API_BASE_URL = "http://192.168.0.75:3001";
+
+interface Subcategory {
+  id: string;
+  name: string;
+  categoryId: string;
+}
 
 const CategorySubList = () => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
 
-  const [subcategories, setSubcategories] = useState<{ id: string, name: string, categoryId: string }[]>([]);
-  const [categoryId, setCategoryId] = useState<string>("");
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
   useEffect(() => {
-    const categories = JSON.parse(localStorage.getItem("categories") || "[]");
-    const found = categories.find((cat: any) => cat.name.toLowerCase() === categoryName?.toLowerCase());
-    if (found) {
-      setCategoryId(found.id);
+    const fetchSubcategories = async () => {
+      try {
+        const categories = JSON.parse(localStorage.getItem("categories") || "[]");
+        const found = categories.find(
+          (cat: any) => cat.name.toLowerCase() === categoryName?.toLowerCase()
+        );
+
+        if (!found) {
+          console.warn("Category not found in localStorage");
+          return;
+        }
+
+        const categoryId = found.id;
+
+        const res = await axios.get(`${API_BASE_URL}/api/getSubcategoriesByCategory`, {
+          params: { categoryId },
+        });
+
+        if (res.data && Array.isArray(res.data.subcategories)) {
+          setSubcategories(res.data.subcategories);
+        } else {
+          console.warn("Unexpected API response:", res.data);
+          setSubcategories([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch subcategories", err);
+        setSubcategories([]);
+      }
+    };
+
+    if (categoryName) {
+      fetchSubcategories();
     }
   }, [categoryName]);
-
-  useEffect(() => {
-    if (categoryId) {
-      const allSubcategories = JSON.parse(localStorage.getItem("subcategories") || "[]");
-      const filtered = allSubcategories.filter((sub: any) => sub.categoryId === categoryId);
-      setSubcategories(filtered);
-    }
-  }, [categoryId]);
 
   return (
     <div className="container mx-auto mt-10 flex flex-col items-center gap-6">

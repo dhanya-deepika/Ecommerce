@@ -82,39 +82,47 @@
 
 // export default AddCategory;
 
-// ✅ AddCategory.tsx (Using LocalStorage)
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
+import axios from "axios";
+
+const BACKEND_URL = "http://192.168.0.75:3000";
 
 const AddCategory = () => {
   const [title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [categories, setCategories] = useState<{ title: string; imageUrl: string }[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("categories");
-    if (stored) {
-      setCategories(JSON.parse(stored));
-    }
-  }, []);
-
-  const handleAdd = () => {
-    if (!title || !imageUrl) {
-      toast.error("Please enter both title and image URL.");
+  const handleAdd = async () => {
+    if (!title || !imageFile) {
+      toast.error("Please enter title and choose an image.");
       return;
     }
 
-    const newCategory = {
-      title: title.trim(),
-      imageUrl: imageUrl.trim(),
-    };
+    const formData = new FormData();
+    formData.append("name", title.trim());
+    formData.append("image", imageFile);
 
-    const updated = [...categories, newCategory];
-    setCategories(updated);
-    localStorage.setItem("categories", JSON.stringify(updated));
-    toast.success("Category added!");
-    setTitle("");
-    setImageUrl("");
+    setLoading(true);
+
+    try {
+      const res = await axios.post(`${BACKEND_URL}/api/addCategory`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data?.category) {
+        toast.success("Category added successfully!");
+        setTitle("");
+        setImageFile(null);
+      }
+    } catch (err) {
+      console.error("Error adding category:", err);
+      toast.error("Failed to add category.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,16 +132,19 @@ const AddCategory = () => {
         className="border p-2 mb-2 w-full"
         placeholder="Category Title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        onChange={(e) => setTitle(e.target.value)}/>
       <input
-        className="border p-2 mb-2 w-full"
-        placeholder="Image URL"
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
+        type="file"
+        accept="image/*"
+        className="border p-2 mb-4 w-full"
+        onChange={(e) => setImageFile(e.target.files?.[0] || null)}
       />
-      <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleAdd}>
-        Add Category
+      <button
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+        onClick={handleAdd}
+        disabled={loading}
+      >
+        {loading ? "Adding..." : "Add Category"}
       </button>
     </div>
   );
